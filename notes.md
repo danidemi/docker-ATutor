@@ -170,3 +170,18 @@ rootpwd
 atutor
 AT_
 
+# Docker 
+- instruction
+
+docker network create --driver bridge atnet
+
+docker rm -v -f mysqladmin && \
+docker rm -v -f mysql && \
+docker rm -v -f atutor;
+
+docker image build -t atutor .
+
+docker run --network=atnet -e MYSQL_ROOT_PASSWORD=rootpwd --name mysql -d mysql:5.7.18 && \
+docker run --network=atnet -p80:80 --name atutor -d atutor && \
+docker run --network=atnet -p8080:80 --name mysqladmin -d phpmyadmin/phpmyadmin
+
