@@ -163,7 +163,7 @@ I fear I have to set up the logger
 
 [Sat Jun 17 14:07:12.530641 2017] [:error] [pid 25] [client 172.17.0.1:36962] Table 'atutor.AT_language_text' doesn't exist, referer: http://localhost/login.php
 
-172.17.0.3
+mysql
 3306
 root
 rootpwd
@@ -175,13 +175,26 @@ AT_
 
 docker network create --driver bridge atnet
 
-docker rm -v -f mysqladmin && \
-docker rm -v -f mysql && \
-docker rm -v -f atutor;
+docker rm -v -f mysqladmin; \
+docker rm -v -f mysql; \
+docker rm -v -f atutor
 
+docker image rmi atutor; \
 docker image build -t atutor .
 
-docker run --network=atnet -e MYSQL_ROOT_PASSWORD=rootpwd --name mysql -d mysql:5.7.18 && \
-docker run --network=atnet -p80:80 --name atutor -d atutor && \
-docker run --network=atnet -p8080:80 --name mysqladmin -d phpmyadmin/phpmyadmin
+docker run --network=atnet -e MYSQL_ROOT_PASSWORD=rootpwd --name mysql -d mysql:5.7.18 ; \
+docker run --network=atnet -p80:80 --name atutor -d atutor ; \
+docker run --network=atnet -p8080:80 --name mysqladmin -e PMA_HOST=mysql -d phpmyadmin/phpmyadmin
 
+docker run --network=atnet -e MYSQL_ROOT_PASSWORD=rootpwd --name mysql -d mysql:5.6; \
+docker run --network=atnet -p80:80 --name atutor -d atutor ; \
+docker run --network=atnet -p8080:80 --name mysqladmin -e PMA_HOST=mysql -d phpmyadmin/phpmyadmin
+
+It seems that 5.7.18 enabled a "strict" mode!
+
+SELECT @@SQL_MODE 
+ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+
+https://dba.stackexchange.com/questions/112633/invalid-default-value-mysql-5-7-for-timestamp-field
+https://dev.mysql.com/doc/refman/5.7/en/sql-mode.html#sqlmode_no_zero_date
+https://stackoverflow.com/questions/9192027/invalid-default-value-for-create-date-timestamp-field

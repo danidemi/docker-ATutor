@@ -4,7 +4,7 @@
 #
 # To run atutor
 #
-#    docker run -e MYSQL_ROOT_PASSWORD=rootpwd --name mysql -d mysql:5.7.18
+#    docker run -e MYSQL_ROOT_PASSWORD=rootpwd --name mysql -d mysql:5.6
 #    docker run -p80:80 --name atutor -d atutor
 
 FROM php:5.6.30-apache
